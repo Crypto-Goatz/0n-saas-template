@@ -1,0 +1,32 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Google Backend" },
+  "layer": {
+    "id": "0n-layer-google-backend",
+    "depends": ["0n-layer-core"],
+    "provides": {
+      "routes": [],
+      "sheets": [],
+      "sidebarItems": []
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/google-backend/*": "source" },
+    "envVars": {
+      "GOOGLE_SERVICE_ACCOUNT_KEY": { "required": true },
+      "GOOGLE_SHEET_ID": { "required": true },
+      "GOOGLE_DRIVE_FOLDER_ID": { "required": true }
+    },
+    "sheets": { "create": [] }
+  },
+  "agent": {
+    "id": "health-monitor-agent",
+    "scanInterval": "6h",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.8,
+    "objectives": [
+      { "metric": "api_uptime", "direction": "maximize", "weight": 0.5 },
+      { "metric": "repair_success_rate", "direction": "maximize", "weight": 0.3 },
+      { "metric": "response_time_ms", "direction": "minimize", "weight": 0.2 }
+    ]
+  }
+}

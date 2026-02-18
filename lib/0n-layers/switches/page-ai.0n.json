@@ -1,0 +1,29 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Page AI" },
+  "layer": {
+    "id": "0n-layer-page-ai",
+    "depends": ["0n-layer-core", "0n-layer-google-backend"],
+    "provides": {
+      "routes": ["/api/cms/content?sheet=pages", "/api/cms/generate?type=page", "/api/cms/generate?type=seo"],
+      "sheets": ["pages", "navigation", "page_experiments", "page_ai_learnings"],
+      "sidebarItems": [{ "label": "Pages", "href": "/content", "icon": "FileText", "group": "Content" }]
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/page-ai/*": "source" },
+    "envVars": { "GEMINI_API_KEY": { "required": true } },
+    "sheets": { "create": ["page_experiments", "page_ai_learnings"] }
+  },
+  "agent": {
+    "id": "page-conversion-agent",
+    "scanInterval": "24h",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.7,
+    "objectives": [
+      { "metric": "bounce_rate", "direction": "minimize", "weight": 0.3 },
+      { "metric": "avg_time_on_page", "direction": "maximize", "weight": 0.2 },
+      { "metric": "cta_click_rate", "direction": "maximize", "weight": 0.3 },
+      { "metric": "conversion_rate", "direction": "maximize", "weight": 0.2 }
+    ]
+  }
+}

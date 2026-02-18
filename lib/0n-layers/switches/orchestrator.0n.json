@@ -1,0 +1,36 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Orchestrator" },
+  "layer": {
+    "id": "0n-layer-orchestrator",
+    "depends": ["0n-layer-core", "0n-layer-google-backend"],
+    "provides": {
+      "routes": ["/api/setup", "/api/cms/config", "/api/cms/media"],
+      "sheets": ["site_config", "media_log", "0n_events", "orchestrator_learnings"],
+      "sidebarItems": [
+        { "label": "Dashboard", "href": "/dashboard", "icon": "LayoutDashboard", "group": "Main" },
+        { "label": "Media", "href": "/media", "icon": "Image", "group": "Content" },
+        { "label": "Settings", "href": "/settings", "icon": "Settings", "group": "Settings" }
+      ]
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/orchestrator/*": "source" },
+    "envVars": {
+      "GOOGLE_SERVICE_ACCOUNT_KEY": { "required": true },
+      "GOOGLE_SHEET_ID": { "required": true },
+      "GOOGLE_DRIVE_FOLDER_ID": { "required": true }
+    },
+    "sheets": { "create": ["site_config", "media_log", "0n_events", "orchestrator_learnings"] }
+  },
+  "agent": {
+    "id": "meta-orchestrator-agent",
+    "scanInterval": "6h",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.8,
+    "objectives": [
+      { "metric": "overall_sxo_score", "direction": "maximize", "weight": 0.4 },
+      { "metric": "cross_layer_alignment", "direction": "maximize", "weight": 0.3 },
+      { "metric": "agent_efficiency", "direction": "maximize", "weight": 0.3 }
+    ]
+  }
+}

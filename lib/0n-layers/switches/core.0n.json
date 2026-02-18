@@ -1,0 +1,18 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Core" },
+  "layer": {
+    "id": "0n-layer-core",
+    "depends": [],
+    "provides": {
+      "routes": [],
+      "sheets": [],
+      "sidebarItems": []
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/core/*": "source" },
+    "envVars": {},
+    "sheets": { "create": [] }
+  },
+  "agent": null
+}

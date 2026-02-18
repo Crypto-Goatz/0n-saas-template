@@ -13,6 +13,12 @@ import {
   ChevronLeft,
   Menu,
   X,
+  FileText,
+  Image,
+  Sparkles,
+  Users,
+  Kanban,
+  Scale,
 } from 'lucide-react'
 
 const navItems = [
@@ -20,10 +26,22 @@ const navItems = [
   { label: 'Sites', href: '/dashboard/sites', icon: Globe },
 ]
 
+const contentItems = [
+  { label: 'Content', href: '/content', icon: FileText },
+  { label: 'Media', href: '/media', icon: Image },
+  { label: 'AI Writer', href: '/content?tab=generate', icon: Sparkles },
+]
+
+const crmItems = [
+  { label: 'Contacts', href: '/crm', icon: Users },
+  { label: 'Pipeline', href: '/crm?tab=pipeline', icon: Kanban },
+]
+
 const settingsItems = [
   { label: 'General', href: '/settings', icon: Settings },
   { label: 'Billing', href: '/settings/billing', icon: CreditCard },
   { label: 'Security', href: '/settings/security', icon: Shield },
+  { label: 'Compliance', href: '/settings/compliance', icon: Scale },
 ]
 
 export function Sidebar() {
@@ -72,6 +90,24 @@ export function Sidebar() {
           Main
         </p>
         {navItems.map((item) => (
+          <NavLink key={item.href} {...item} />
+        ))}
+
+        <div className="my-4 border-t border-border/30" />
+
+        <p className={cn('mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-subtle', collapsed && 'sr-only')}>
+          Content
+        </p>
+        {contentItems.map((item) => (
+          <NavLink key={item.href} {...item} />
+        ))}
+
+        <div className="my-4 border-t border-border/30" />
+
+        <p className={cn('mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-subtle', collapsed && 'sr-only')}>
+          CRM
+        </p>
+        {crmItems.map((item) => (
           <NavLink key={item.href} {...item} />
         ))}
 

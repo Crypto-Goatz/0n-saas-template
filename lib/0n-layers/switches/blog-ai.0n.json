@@ -1,0 +1,29 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Blog AI" },
+  "layer": {
+    "id": "0n-layer-blog-ai",
+    "depends": ["0n-layer-core", "0n-layer-google-backend"],
+    "provides": {
+      "routes": ["/api/cms/content?sheet=blog_posts", "/api/cms/generate?type=blog"],
+      "sheets": ["blog_posts", "content_calendar", "blog_ai_learnings"],
+      "sidebarItems": [{ "label": "Blog", "href": "/content?tab=blog", "icon": "PenLine", "group": "Content" }]
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/blog-ai/*": "source" },
+    "envVars": { "GEMINI_API_KEY": { "required": true } },
+    "sheets": { "create": ["content_calendar", "blog_ai_learnings"] }
+  },
+  "agent": {
+    "id": "blog-traffic-agent",
+    "scanInterval": "24h",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.7,
+    "objectives": [
+      { "metric": "impressions", "direction": "maximize", "weight": 0.2 },
+      { "metric": "clicks", "direction": "maximize", "weight": 0.3 },
+      { "metric": "avg_position", "direction": "minimize", "weight": 0.3 },
+      { "metric": "keyword_coverage", "direction": "maximize", "weight": 0.2 }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "Compliance" },
+  "layer": {
+    "id": "0n-layer-compliance",
+    "depends": ["0n-layer-core"],
+    "provides": {
+      "routes": [],
+      "sheets": ["compliance_ai_learnings"],
+      "sidebarItems": [{ "label": "Compliance", "href": "/settings/compliance", "icon": "Shield", "group": "Settings" }]
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/compliance/*": "source" },
+    "envVars": {},
+    "sheets": { "create": ["compliance_ai_learnings"] }
+  },
+  "agent": {
+    "id": "compliance-audit-agent",
+    "scanInterval": "7d",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.6,
+    "objectives": [
+      { "metric": "consent_rate", "direction": "maximize", "weight": 0.4 },
+      { "metric": "banner_dismiss_rate", "direction": "minimize", "weight": 0.3 },
+      { "metric": "policy_freshness", "direction": "maximize", "weight": 0.3 }
+    ]
+  }
+}

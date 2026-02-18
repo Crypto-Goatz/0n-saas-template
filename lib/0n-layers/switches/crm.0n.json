@@ -1,0 +1,32 @@
+{
+  "$0n": { "type": "layer", "version": "1.0.0", "name": "CRM" },
+  "layer": {
+    "id": "0n-layer-crm",
+    "depends": ["0n-layer-core", "0n-layer-google-backend"],
+    "provides": {
+      "routes": ["/api/crm/sync", "/api/cms/content?sheet=contacts", "/api/cms/content?sheet=leads"],
+      "sheets": ["contacts", "leads", "pipeline", "activities", "tags", "crm_ai_learnings"],
+      "sidebarItems": [{ "label": "CRM", "href": "/crm", "icon": "Users", "group": "Business" }]
+    }
+  },
+  "installation": {
+    "files": { "lib/0n-layers/crm/*": "source" },
+    "envVars": {
+      "CRM_API_KEY": { "required": false },
+      "CRM_LOCATION_ID": { "required": false }
+    },
+    "sheets": { "create": ["contacts", "leads", "pipeline", "activities", "tags", "crm_ai_learnings"] }
+  },
+  "agent": {
+    "id": "crm-intelligence-agent",
+    "scanInterval": "12h",
+    "trustLevel": "recommend",
+    "confidenceThreshold": 0.7,
+    "objectives": [
+      { "metric": "lead_velocity", "direction": "maximize", "weight": 0.3 },
+      { "metric": "conversion_rate", "direction": "maximize", "weight": 0.3 },
+      { "metric": "stall_rate", "direction": "minimize", "weight": 0.2 },
+      { "metric": "response_time", "direction": "minimize", "weight": 0.2 }
+    ]
+  }
+}

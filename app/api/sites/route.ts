@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getAuth, checkPlanLimit } from '@/lib/auth'
+import { TABLES, TABLE_PREFIX } from '@/lib/constants'
 
 export async function GET() {
   try {
@@ -12,12 +13,12 @@ export async function GET() {
     const supabase = getSupabaseAdmin()
 
     const { data: userSites } = await supabase
-      .from('cr0n_user_sites')
+      .from(TABLES.userSites)
       .select(`
         role,
-        site:cr0n_sites(id, name, domain, settings, created_at)
+        site:${TABLE_PREFIX}_sites(id, name, domain, settings, created_at)
       `)
-      .eq('user_id', auth.userId)
+      .eq('user_id', auth.userId) as { data: Array<{ role: string; site: Record<string, unknown> | Record<string, unknown>[] }> | null }
 
     const sites = userSites?.map((us) => ({
       ...((Array.isArray(us.site) ? us.site[0] : us.site) || {}),
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
     const supabase = getSupabaseAdmin()
 
     const { data: site, error } = await supabase
-      .from('cr0n_sites')
+      .from(TABLES.sites)
       .insert({ name, domain: domain || null })
       .select('id, name, domain')
       .single()
@@ -63,7 +64,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to create site' }, { status: 500 })
     }
 
-    await supabase.from('cr0n_user_sites').insert({
+    await supabase.from(TABLES.userSites).insert({
       user_id: auth.userId,
       site_id: site.id,
       role: 'owner',

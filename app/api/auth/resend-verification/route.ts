@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getAuth, generateVerifyToken } from '@/lib/auth'
 import { sendVerificationEmail } from '@/lib/email'
+import { TABLES } from '@/lib/constants'
 
 export async function POST() {
   try {
@@ -17,14 +18,14 @@ export async function POST() {
     const supabase = getSupabaseAdmin()
 
     // Delete existing tokens
-    await supabase.from('cr0n_email_verifications').delete().eq('user_id', auth.userId)
+    await supabase.from(TABLES.emailVerifications).delete().eq('user_id', auth.userId)
 
     // Create new token
     const token = generateVerifyToken()
     const expiresAt = new Date()
     expiresAt.setHours(expiresAt.getHours() + 24)
 
-    await supabase.from('cr0n_email_verifications').insert({
+    await supabase.from(TABLES.emailVerifications).insert({
       user_id: auth.userId,
       token,
       expires_at: expiresAt.toISOString(),

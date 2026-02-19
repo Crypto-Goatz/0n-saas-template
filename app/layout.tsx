@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
 })
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'cr0n'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cro9.com'
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || '0n'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://0n-saas-template.vercel.app'
 
 export const metadata: Metadata = {
   title: {

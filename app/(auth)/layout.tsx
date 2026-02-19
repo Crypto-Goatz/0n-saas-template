@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <span className="text-lg font-bold text-void">0</span>
         </div>
         <span className="text-2xl font-bold text-white">
-          cr<span className="text-cr0n-cyan">0</span>n
+          <span className="text-cr0n-cyan">0</span>n
         </span>
       </Link>
 
@@ -27,7 +27,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       {/* Footer */}
       <p className="relative z-10 mt-8 text-xs text-subtle">
-        &copy; {new Date().getFullYear()} cr0n. All rights reserved.
+        &copy; {new Date().getFullYear()} 0n. All rights reserved.
       </p>
     </div>
   )

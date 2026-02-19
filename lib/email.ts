@@ -11,9 +11,9 @@ function getResend(): Resend {
   return _resend
 }
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'cr0n <noreply@cro9.com>'
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cro9.com'
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'cr0n'
+const FROM_EMAIL = process.env.FROM_EMAIL || '0n <noreply@0nmcp.com>'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://0n-saas-template.vercel.app'
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || '0n'
 
 interface EmailResult {
   success: boolean

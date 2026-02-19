@@ -38,7 +38,7 @@ export function Footer() {
                 <span className="text-sm font-bold text-void">0</span>
               </div>
               <span className="text-lg font-bold text-white">
-                cr<span className="text-cr0n-cyan">0</span>n
+                <span className="text-cr0n-cyan">0</span>n
               </span>
             </Link>
             <p className="mt-3 text-sm text-subtle">
@@ -66,7 +66,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-border/30 pt-6 text-center text-xs text-subtle">
-          &copy; {new Date().getFullYear()} cr0n. All rights reserved.
+          &copy; {new Date().getFullYear()} 0n. All rights reserved.
         </div>
       </div>
     </footer>

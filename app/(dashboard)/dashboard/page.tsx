@@ -68,7 +68,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="mt-1 text-sm text-subtle">Overview of your cr0n workspace</p>
+        <p className="mt-1 text-sm text-subtle">Overview of your workspace</p>
       </div>
 
       {/* Setup Prompt */}

@@ -6,16 +6,16 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: 'What is cr0n?',
-    answer: 'cr0n is an autonomous growth engine that combines conversion rate optimization (CRO) and search experience optimization (SXO) into one self-learning AI system. It continuously optimizes your site for better conversions and search performance.',
+    question: 'What is 0n?',
+    answer: '0n is an autonomous growth engine that combines conversion rate optimization (CRO) and search experience optimization (SXO) into one self-learning AI system. It continuously optimizes your site for better conversions and search performance.',
   },
   {
     question: 'How does the AI optimization work?',
-    answer: 'cr0n uses machine learning models trained on conversion and search behavior data. It automatically identifies optimization opportunities, tests improvements, and implements winning changes — all without manual intervention.',
+    answer: '0n uses machine learning models trained on conversion and search behavior data. It automatically identifies optimization opportunities, tests improvements, and implements winning changes — all without manual intervention.',
   },
   {
-    question: 'Do I need technical knowledge to use cr0n?',
-    answer: 'No. cr0n is designed to be plug-and-play. Simply add your domain, install a lightweight script, and the AI handles everything else. No coding or marketing expertise required.',
+    question: 'Do I need technical knowledge to use 0n?',
+    answer: 'No. 0n is designed to be plug-and-play. Simply add your domain, install a lightweight script, and the AI handles everything else. No coding or marketing expertise required.',
   },
   {
     question: 'Can I cancel my subscription anytime?',
@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     question: 'Is there a free trial?',
-    answer: 'Yes! The Free plan lets you optimize one site with basic features at no cost. Pro and Enterprise plans include a free trial period so you can experience the full power of cr0n risk-free.',
+    answer: 'Yes! The Free plan lets you optimize one site with basic features at no cost. Pro and Enterprise plans include a free trial period so you can experience the full power of 0n risk-free.',
   },
   {
     question: 'What kind of results can I expect?',

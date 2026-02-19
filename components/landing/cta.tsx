@@ -18,7 +18,7 @@ export function CTA() {
               Ready to grow on <span className="text-gradient">autopilot</span>?
             </h2>
             <p className="mx-auto mb-8 max-w-lg text-gray-400">
-              Join thousands of businesses using cr0n to automate their growth.
+              Join thousands of businesses using 0n to automate their growth.
               Start free — no credit card required.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">

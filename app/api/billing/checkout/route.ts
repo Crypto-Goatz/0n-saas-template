@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getAuth } from '@/lib/auth'
 import { createCheckoutSession, createOrGetCustomer } from '@/lib/stripe'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cro9.com'
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://0n-saas-template.vercel.app'
 
 export async function POST(request: Request) {
   try {

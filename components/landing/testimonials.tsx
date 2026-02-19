@@ -2,12 +2,12 @@ import { Card } from '@/components/ui/card'
 
 const testimonials = [
   {
-    quote: "cr0n increased our conversion rate by 47% in the first month. The autonomous optimization is game-changing.",
+    quote: "0n increased our conversion rate by 47% in the first month. The autonomous optimization is game-changing.",
     author: 'Sarah Chen',
     role: 'Head of Growth, TechScale',
   },
   {
-    quote: "We replaced 3 separate tools with cr0n. CRO and SXO in one place — it just makes sense.",
+    quote: "We replaced 3 separate tools with 0n. CRO and SXO in one place — it just makes sense.",
     author: 'Marcus Rodriguez',
     role: 'CEO, DataFlow',
   },

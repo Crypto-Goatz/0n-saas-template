@@ -12,7 +12,7 @@ const steps = [
   {
     step: '03',
     title: 'Autonomous Optimization',
-    description: 'cr0n continuously tests and implements improvements. Conversions and search rankings grow on autopilot.',
+    description: '0n continuously tests and implements improvements. Conversions and search rankings grow on autopilot.',
   },
 ]
 
@@ -26,7 +26,7 @@ export function HowItWorks() {
             Three steps to <span className="text-gradient">autonomous growth</span>
           </h2>
           <p className="text-gray-400">
-            Set it up once. Let cr0n handle the rest.
+            Set it up once. Let 0n handle the rest.
           </p>
         </div>
 

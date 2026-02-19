@@ -21,8 +21,8 @@ interface ConsentState {
 
 const ConsentContext = createContext<ConsentState | null>(null)
 
-const COOKIE_KEY = 'cr0n_consent'
-const STORAGE_KEY = 'cr0n_consent_prefs'
+const COOKIE_KEY = '0n_consent'
+const STORAGE_KEY = '0n_consent_prefs'
 
 export function ConsentProvider({ children, defaultMode = 'essential' }: { children: ReactNode; defaultMode?: ConsentMode }) {
   const [mode, setModeState] = useState<ConsentMode>(defaultMode)

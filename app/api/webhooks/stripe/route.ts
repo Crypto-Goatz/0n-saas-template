@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { getStripe, getPlanFromPriceId } from '@/lib/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { TABLES } from '@/lib/constants'
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
         const periodEnd = (subscription as any).current_period_end as number | undefined
 
         await supabase
-          .from('cr0n_users')
+          .from(TABLES.users)
           .update({
             plan,
             stripe_customer_id: customerId,
@@ -63,7 +64,7 @@ export async function POST(request: Request) {
       const periodEnd = (subscription as any).current_period_end as number | undefined
 
       await supabase
-        .from('cr0n_users')
+        .from(TABLES.users)
         .update({
           plan,
           stripe_subscription_id: subscription.id,
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
       const customerId = subscription.customer as string
 
       await supabase
-        .from('cr0n_users')
+        .from(TABLES.users)
         .update({
           plan: 'free',
           stripe_subscription_id: null,

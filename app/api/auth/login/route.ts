@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { verifyPassword, createSession, setSessionCookie, logActivity } from '@/lib/auth'
+import { TABLES } from '@/lib/constants'
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     const supabase = getSupabaseAdmin()
 
     const { data: user, error } = await supabase
-      .from('cr0n_users')
+      .from(TABLES.users)
       .select('id, email, password_hash, full_name, plan, status, email_verified, stripe_customer_id')
       .eq('email', email.toLowerCase())
       .single()
@@ -32,14 +33,14 @@ export async function POST(request: Request) {
 
     // Clean up old sessions for this user (keep max 5)
     const { data: sessions } = await supabase
-      .from('cr0n_sessions')
+      .from(TABLES.sessions)
       .select('id')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
     if (sessions && sessions.length >= 5) {
       const toDelete = sessions.slice(4).map((s) => s.id)
-      await supabase.from('cr0n_sessions').delete().in('id', toDelete)
+      await supabase.from(TABLES.sessions).delete().in('id', toDelete)
     }
 
     // Create session
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
     await setSessionCookie(sessionToken)
 
     // Update last login
-    await supabase.from('cr0n_users').update({ last_login_at: new Date().toISOString() }).eq('id', user.id)
+    await supabase.from(TABLES.users).update({ last_login_at: new Date().toISOString() }).eq('id', user.id)
 
     // Log activity
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()

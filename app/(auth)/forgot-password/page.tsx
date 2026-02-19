@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { PasswordResetForm } from '@/components/auth/password-reset-form'
 
 export const metadata: Metadata = {
-  title: 'Reset Password — cr0n',
-  description: 'Reset your cr0n password',
+  title: 'Reset Password — 0n',
+  description: 'Reset your 0n password',
 }
 
 export default function ForgotPasswordPage() {

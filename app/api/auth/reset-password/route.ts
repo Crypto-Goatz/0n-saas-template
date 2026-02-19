@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { hashPassword, generateResetToken, logActivity } from '@/lib/auth'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { TABLES } from '@/lib/constants'
 
 // POST: Request a password reset
 export async function POST(request: Request) {
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
     const supabase = getSupabaseAdmin()
 
     const { data: user } = await supabase
-      .from('cr0n_users')
+      .from(TABLES.users)
       .select('id, email')
       .eq('email', email.toLowerCase())
       .single()
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     const expiresAt = new Date()
     expiresAt.setHours(expiresAt.getHours() + 1)
 
-    await supabase.from('cr0n_password_resets').insert({
+    await supabase.from(TABLES.passwordResets).insert({
       user_id: user.id,
       token,
       expires_at: expiresAt.toISOString(),
@@ -59,7 +60,7 @@ export async function PUT(request: Request) {
     const supabase = getSupabaseAdmin()
 
     const { data: reset, error } = await supabase
-      .from('cr0n_password_resets')
+      .from(TABLES.passwordResets)
       .select('id, user_id, expires_at, used')
       .eq('token', token)
       .single()
@@ -75,13 +76,13 @@ export async function PUT(request: Request) {
     const passwordHash = hashPassword(password)
 
     // Update password
-    await supabase.from('cr0n_users').update({ password_hash: passwordHash }).eq('id', reset.user_id)
+    await supabase.from(TABLES.users).update({ password_hash: passwordHash }).eq('id', reset.user_id)
 
     // Mark token as used
-    await supabase.from('cr0n_password_resets').update({ used: true }).eq('id', reset.id)
+    await supabase.from(TABLES.passwordResets).update({ used: true }).eq('id', reset.id)
 
     // Invalidate all existing sessions
-    await supabase.from('cr0n_sessions').delete().eq('user_id', reset.user_id)
+    await supabase.from(TABLES.sessions).delete().eq('user_id', reset.user_id)
 
     await logActivity('reset_password', reset.user_id)
 

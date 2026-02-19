@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { deleteSession, clearSessionCookie, logActivity } from '@/lib/auth'
+import { TABLE_PREFIX } from '@/lib/constants'
 
 export async function POST() {
   try {
     const cookieStore = await cookies()
-    const token = cookieStore.get('cr0n_session')?.value
+    const token = cookieStore.get(`${TABLE_PREFIX}_session`)?.value
 
     if (token) {
       await deleteSession(token)

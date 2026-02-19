@@ -4,6 +4,7 @@ import { hashPassword, generateVerifyToken, createSession, setSessionCookie, log
 import { sendWelcomeEmail, sendVerificationEmail } from '@/lib/email'
 import { createOrGetCustomer } from '@/lib/stripe'
 import { syncRegistration } from '@/lib/crm'
+import { TABLES, TABLE_PREFIX } from '@/lib/constants'
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
 
     // Check if user exists
     const { data: existing } = await supabase
-      .from('cr0n_users')
+      .from(TABLES.users)
       .select('id')
       .eq('email', email.toLowerCase())
       .single()
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
 
     // Create user
     const { data: user, error: userError } = await supabase
-      .from('cr0n_users')
+      .from(TABLES.users)
       .insert({
         email: email.toLowerCase(),
         password_hash: passwordHash,
@@ -51,13 +52,13 @@ export async function POST(request: Request) {
 
     // Create default site
     const { data: site } = await supabase
-      .from('cr0n_sites')
+      .from(TABLES.sites)
       .insert({ name: fullName ? `${fullName}'s Site` : 'My Site' })
       .select('id')
       .single()
 
     if (site) {
-      await supabase.from('cr0n_user_sites').insert({
+      await supabase.from(TABLES.userSites).insert({
         user_id: user.id,
         site_id: site.id,
         role: 'owner',
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
     const verifyExpires = new Date()
     verifyExpires.setHours(verifyExpires.getHours() + 24)
 
-    await supabase.from('cr0n_email_verifications').insert({
+    await supabase.from(TABLES.emailVerifications).insert({
       user_id: user.id,
       token: verifyToken,
       expires_at: verifyExpires.toISOString(),
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
     // Best-effort: Stripe customer, CRM contact, emails
     const [stripeCustomer, crmContact] = await Promise.allSettled([
       createOrGetCustomer({ email: user.email, name: fullName, metadata: { user_id: user.id } }),
-      syncRegistration({ email: user.email, name: fullName, source: 'cr0n' }),
+      syncRegistration({ email: user.email, name: fullName, source: TABLE_PREFIX }),
     ])
 
     // Update user with Stripe/CRM IDs
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
     if (crmContact.status === 'fulfilled' && crmContact.value) updates.crm_contact_id = crmContact.value.id
 
     if (Object.keys(updates).length > 0) {
-      await supabase.from('cr0n_users').update(updates).eq('id', user.id)
+      await supabase.from(TABLES.users).update(updates).eq('id', user.id)
     }
 
     // Send emails (non-blocking)

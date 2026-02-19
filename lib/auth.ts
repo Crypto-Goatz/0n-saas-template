@@ -2,9 +2,9 @@ import crypto from 'crypto'
 import { cookies } from 'next/headers'
 import { getSupabaseAdmin } from './supabase'
 import { PLAN_LIMITS, getPlanLimit } from './pricing'
+import { TABLE_PREFIX, TABLES } from './constants'
 
-const PREFIX = 'cr0n'
-const COOKIE_NAME = `${PREFIX}_session`
+const COOKIE_NAME = `${TABLE_PREFIX}_session`
 const SESSION_DAYS = 30
 
 export interface AuthContext {
@@ -42,15 +42,15 @@ export function verifyPassword(password: string, storedHash: string): boolean {
 // ── Token Generation ────────────────────────────────────────
 
 export function generateSessionToken(): string {
-  return `${PREFIX}_${crypto.randomUUID()}`
+  return `${TABLE_PREFIX}_${crypto.randomUUID()}`
 }
 
 export function generateResetToken(): string {
-  return `${PREFIX}_reset_${crypto.randomUUID()}`
+  return `${TABLE_PREFIX}_reset_${crypto.randomUUID()}`
 }
 
 export function generateVerifyToken(): string {
-  return `${PREFIX}_verify_${crypto.randomUUID()}`
+  return `${TABLE_PREFIX}_verify_${crypto.randomUUID()}`
 }
 
 // ── Session Management ──────────────────────────────────────
@@ -64,7 +64,7 @@ export async function createSession(userId: string, request?: Request): Promise<
   const ip = request?.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null
   const ua = request?.headers.get('user-agent') || null
 
-  await supabase.from(`${PREFIX}_sessions`).insert({
+  await supabase.from(TABLES.sessions).insert({
     user_id: userId,
     token,
     expires_at: expiresAt.toISOString(),
@@ -93,7 +93,7 @@ export async function clearSessionCookie(): Promise<void> {
 
 export async function deleteSession(token: string): Promise<void> {
   const supabase = getSupabaseAdmin()
-  await supabase.from(`${PREFIX}_sessions`).delete().eq('token', token)
+  await supabase.from(TABLES.sessions).delete().eq('token', token)
 }
 
 // ── Auth Context ────────────────────────────────────────────
@@ -106,18 +106,18 @@ export async function getAuth(): Promise<AuthContext | null> {
 
     const supabase = getSupabaseAdmin()
     const { data: session, error } = await supabase
-      .from(`${PREFIX}_sessions`)
+      .from(TABLES.sessions)
       .select(`
         id,
         expires_at,
-        user:${PREFIX}_users(
+        user:${TABLE_PREFIX}_users(
           id, email, full_name, plan, email_verified, status,
           stripe_customer_id, stripe_subscription_id, crm_contact_id
         )
       `)
       .eq('token', sessionToken)
       .gt('expires_at', new Date().toISOString())
-      .single()
+      .single() as { data: { id: string; expires_at: string; user: Record<string, string | boolean | null> | Record<string, string | boolean | null>[] } | null; error: unknown }
 
     if (error || !session) return null
 
@@ -125,14 +125,14 @@ export async function getAuth(): Promise<AuthContext | null> {
     if (!user || user.status !== 'active') return null
 
     return {
-      userId: user.id,
-      email: user.email,
-      fullName: user.full_name,
-      plan: user.plan || 'free',
-      emailVerified: user.email_verified,
-      stripeCustomerId: user.stripe_customer_id,
-      stripeSubscriptionId: user.stripe_subscription_id,
-      crmContactId: user.crm_contact_id,
+      userId: user.id as string,
+      email: user.email as string,
+      fullName: (user.full_name as string) || null,
+      plan: (user.plan as string) || 'free',
+      emailVerified: user.email_verified as boolean,
+      stripeCustomerId: (user.stripe_customer_id as string) || null,
+      stripeSubscriptionId: (user.stripe_subscription_id as string) || null,
+      crmContactId: (user.crm_contact_id as string) || null,
     }
   } catch (error) {
     console.error('Auth check error:', error)
@@ -145,7 +145,7 @@ export async function getAuth(): Promise<AuthContext | null> {
 export async function verifySiteAccess(userId: string, siteId: string): Promise<SiteAccess | null> {
   try {
     const { data, error } = await getSupabaseAdmin()
-      .from(`${PREFIX}_user_sites`)
+      .from(TABLES.userSites)
       .select('site_id, role')
       .eq('user_id', userId)
       .eq('site_id', siteId)
@@ -161,7 +161,7 @@ export async function verifySiteAccess(userId: string, siteId: string): Promise<
 export async function getUserSites(userId: string): Promise<string[]> {
   try {
     const { data } = await getSupabaseAdmin()
-      .from(`${PREFIX}_user_sites`)
+      .from(TABLES.userSites)
       .select('site_id')
       .eq('user_id', userId)
 
@@ -178,7 +178,7 @@ export async function checkPlanLimit(
   const supabase = getSupabaseAdmin()
 
   const { data: user } = await supabase
-    .from(`${PREFIX}_users`)
+    .from(TABLES.users)
     .select('plan')
     .eq('id', userId)
     .single()
@@ -190,7 +190,7 @@ export async function checkPlanLimit(
   let current = 0
   if (resource === 'sites') {
     const { count } = await supabase
-      .from(`${PREFIX}_user_sites`)
+      .from(TABLES.userSites)
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
       .eq('role', 'owner')
@@ -210,7 +210,7 @@ export async function logActivity(
   ipAddress?: string,
 ): Promise<void> {
   try {
-    await getSupabaseAdmin().from(`${PREFIX}_activity_log`).insert({
+    await getSupabaseAdmin().from(TABLES.activityLog).insert({
       action,
       user_id: userId || null,
       site_id: siteId || null,
